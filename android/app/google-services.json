@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "340926097781",
+    "project_id": "fir-menssages",
+    "storage_bucket": "fir-menssages.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:340926097781:android:930049fa3484668e02cb3c",
+        "android_client_info": {
+          "package_name": "com.firebasemenssages"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "340926097781-91om7sipaaiqeceh96ongme3vsuksn1e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.firebasemenssages",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "340926097781-9os57ah5bpe8m91p7i9d39rdvm0hhv5h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKUP3uhG4Xrm-B1kIgBxCBMUzoPyKCJH4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "340926097781-9ale6m369ifp5hj2kq6k2mnhmr7tlp1s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
