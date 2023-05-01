@@ -1,26 +1,40 @@
-import { Image, StyleSheet, TouchableOpacity, Text, View, Dimensions } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import { Image, StyleSheet, TouchableOpacity, Text, View } from 'react-native';
+import React, { useState } from 'react';
 
 type FirechatScreenProps = {
-     user: {
-          displayName: string;
-          photoURL: string;
+     route: {
+          params: {
+               user: {
+                    displayName?: string;
+                    photoURL?: string;
+               };
+               singOut: () => void;
+          };
      };
-     isSingOut: boolean;
-     singOut: () => void;
+     navigation: any;
 };
 
-export function FirechatScreen({ user, isSingOut, singOut }: FirechatScreenProps) {
+export function FirechatScreen({ route, navigation }: FirechatScreenProps) {
+     const { user, singOut } = route.params;
+     const [isSingOut, setSingOut] = useState(false);
+     const handleSingOut = async () => {
+          setSingOut(true);
+          await singOut();
+          setSingOut(false);
+     };
      return (
           <View style={styles.container}>
                <Text style={styles.text}>Welcome {user.displayName}</Text>
-               <Image
-                    source={{ uri: user.photoURL }}
-                    style={{ width: 100, height: 100, borderRadius: 100 }}
-               />
+               <Image source={{ uri: user.photoURL }} style={styles.photoURL} />
                <TouchableOpacity
                     style={styles.button_sing_out}
-                    onPress={() => (!isSingOut ? singOut() : null)}
+                    onPress={() => navigation.navigate('Chat')}
+               >
+                    <Text style={styles.button_text}>Chat</Text>
+               </TouchableOpacity>
+               <TouchableOpacity
+                    style={styles.button_sing_out}
+                    onPress={() => (!isSingOut ? handleSingOut() : null)}
                >
                     <Text style={styles.button_text}>Sing Out</Text>
                </TouchableOpacity>
@@ -35,11 +49,7 @@ const styles = StyleSheet.create({
           justifyContent: 'center',
           backgroundColor: '#ffffff',
      },
-     chat_icon: {
-          margin: 10,
-          width: 150,
-          height: 150,
-     },
+     photoURL: { width: 100, height: 100, borderRadius: 100 },
      text: {
           color: '#000000',
           textAlign: 'center',
@@ -47,6 +57,7 @@ const styles = StyleSheet.create({
           fontWeight: 'bold',
      },
      button_sing_out: {
+          marginTop: 15,
           alignItems: 'center',
           justifyContent: 'center',
           flexDirection: 'row',

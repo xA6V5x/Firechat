@@ -1,88 +1,30 @@
-import { Image, StyleSheet, TouchableOpacity, Text, View, Dimensions } from 'react-native';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import auth from '@react-native-firebase/auth';
-import React, { useState, useEffect } from 'react';
-import { FirechatScreen } from './FirechatScreen';
+import { Image, StyleSheet, TouchableOpacity, Text, View } from 'react-native';
+import React from 'react';
 
-type userProps = {
-     displayName: string;
-     photoURL: string;
+type LoginScreenProps = {
+     route: { params: { onGoogleButtonPress: () => void } };
 };
 
-export function LoginScreen() {
-     GoogleSignin.configure({
-          webClientId: '340926097781-9os57ah5bpe8m91p7i9d39rdvm0hhv5h.apps.googleusercontent.com',
-     });
+export function LoginScreen({ route }: LoginScreenProps) {
+     const { onGoogleButtonPress } = route.params;
 
-     const [initializing, setInitializing] = useState<boolean>(true);
-     const [user, setUser] = useState<userProps>();
-     const [isSingOut, setSingOut] = useState<boolean>(false);
-
-     function onAuthStateChanged(user: userProps) {
-          setUser(user);
-          if (initializing) setInitializing(false);
-     }
-
-     useEffect(() => {
-          const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-          return subscriber;
-     }, []);
-
-     const onGoogleButtonPress = async () => {
-          // Check if your device supports Google Play
-          await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-          // Get the users ID token
-          const { idToken } = await GoogleSignin.signIn();
-          // Create a Google credential with the token
-          const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-          // Sign-in the user with the credential
-          const user_sing_in = auth().signInWithCredential(googleCredential);
-          user_sing_in
-               .then((user) => {
-                    // console.log(user);
-               })
-               .catch((error) => {
-                    console.log(error);
-               });
-     };
-
-     const singOut = async () => {
-          setSingOut(true);
-          try {
-               await GoogleSignin.revokeAccess();
-               await auth().signOut();
-               setSingOut(false);
-          } catch (error) {
-               setSingOut(false);
-               console.error(error);
-          }
-     };
-
-     if (initializing) return null;
-
-     if (!user) {
-          return (
-               <View style={styles.container}>
+     return (
+          <View style={styles.container}>
+               <Image source={require('../assets/images/chatIcon.png')} style={styles.chat_icon} />
+               <Text style={styles.text}>Firechat</Text>
+               <TouchableOpacity
+                    activeOpacity={0.9}
+                    style={styles.button}
+                    onPress={() => onGoogleButtonPress()}
+               >
                     <Image
-                         source={require('../assets/images/chatIcon.png')}
-                         style={styles.chat_icon}
+                         source={require('../assets/images/googleIcon.png')}
+                         style={styles.button_image}
                     />
-                    <Text style={styles.text}>Firechat</Text>
-                    <TouchableOpacity
-                         activeOpacity={0.9}
-                         style={styles.button}
-                         onPress={() => onGoogleButtonPress()}
-                    >
-                         <Image
-                              source={require('../assets/images/googleIcon.png')}
-                              style={styles.button_image}
-                         />
-                         <Text style={styles.button_text}>Continuar con Google</Text>
-                    </TouchableOpacity>
-               </View>
-          );
-     }
-     return <FirechatScreen user={user} isSingOut={isSingOut} singOut={singOut} />;
+                    <Text style={styles.button_text}>Continuar con Google</Text>
+               </TouchableOpacity>
+          </View>
+     );
 }
 
 const styles = StyleSheet.create({

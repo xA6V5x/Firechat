@@ -1,9 +1,16 @@
 import React from 'react';
 
-import { LoginScreen } from './screens/LoginScreen';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { useColorScheme } from 'react-native';
+import Navigation from './navigation';
 
 function App(): JSX.Element {
-     return <LoginScreen />;
+     const colorScheme = useColorScheme();
+     return (
+          <SafeAreaProvider>
+               <Navigation colorScheme={colorScheme} />
+          </SafeAreaProvider>
+     );
 }
 
 export default App;
