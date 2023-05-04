@@ -1,5 +1,5 @@
 import { Image, StyleSheet, TouchableOpacity, Text, View } from 'react-native';
-import React, { useState } from 'react';
+import React from 'react';
 
 type FirechatScreenProps = {
      route: {
@@ -8,20 +8,14 @@ type FirechatScreenProps = {
                     displayName?: string;
                     photoURL?: string;
                };
-               singOut: () => void;
           };
      };
      navigation: any;
 };
 
 export function FirechatScreen({ route, navigation }: FirechatScreenProps) {
-     const { user, singOut } = route.params;
-     const [isSingOut, setSingOut] = useState(false);
-     const handleSingOut = async () => {
-          setSingOut(true);
-          await singOut();
-          setSingOut(false);
-     };
+     const { user } = route.params;
+
      return (
           <View style={styles.container}>
                <Text style={styles.text}>Welcome {user.displayName}</Text>
@@ -31,12 +25,6 @@ export function FirechatScreen({ route, navigation }: FirechatScreenProps) {
                     onPress={() => navigation.navigate('Chat')}
                >
                     <Text style={styles.button_text}>Chat</Text>
-               </TouchableOpacity>
-               <TouchableOpacity
-                    style={styles.button_sing_out}
-                    onPress={() => (!isSingOut ? handleSingOut() : null)}
-               >
-                    <Text style={styles.button_text}>Sing Out</Text>
                </TouchableOpacity>
           </View>
      );

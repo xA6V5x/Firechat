@@ -2,7 +2,7 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ColorSchemeName } from 'react-native';
 import { RootStackParamList } from './types';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactElement } from 'react';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 
@@ -10,6 +10,7 @@ import auth from '@react-native-firebase/auth';
 import { LoginScreen } from '../screens/LoginScreen';
 import { FirechatScreen } from '../screens/FirechatScreen';
 import { ChatScreen } from '../screens/ChatScreen';
+import { SingOut } from '../components/SingOut';
 
 type LoginNavigatorProps = {
      onGoogleButtonPress: () => void;
@@ -20,7 +21,7 @@ type RootNavigatorProps = {
           displayName?: string;
           photoURL?: string;
      };
-     singOut: () => void;
+     SingOutButton: ReactElement;
 };
 
 type userProps = {
@@ -77,7 +78,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
                {!user ? (
                     <LoginNavigator onGoogleButtonPress={onGoogleButtonPress} />
                ) : (
-                    <RootNavigator user={user} singOut={singOut} />
+                    <RootNavigator user={user} SingOutButton={<SingOut singOut={singOut} />} />
                )}
           </NavigationContainer>
      );
@@ -98,17 +99,21 @@ function LoginNavigator({ onGoogleButtonPress }: LoginNavigatorProps) {
      );
 }
 
-function RootNavigator({ user, singOut }: RootNavigatorProps) {
+function RootNavigator({ user, SingOutButton }: RootNavigatorProps) {
      return (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
                <Stack.Screen
                     name="Firechat"
-                    initialParams={{ user, singOut }}
+                    initialParams={{ user }}
                     component={FirechatScreen}
-                    options={{ headerShown: false }}
+                    options={{
+                         headerShown: true,
+                         headerRight: () => SingOutButton,
+                    }}
                />
                <Stack.Screen
                     name="Chat"
+                    initialParams={{ user }}
                     component={ChatScreen}
                     options={{ headerShown: true, animation: 'slide_from_right' }}
                />

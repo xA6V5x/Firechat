@@ -1,39 +1,66 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import React, { useState, useLayoutEffect, useCallback } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { GiftedChat } from 'react-native-gifted-chat';
+import firestore from '@react-native-firebase/firestore';
 
-export function ChatScreen() {
+type ChatScreenProps = {
+     route: {
+          params: {
+               user: {
+                    uid?: string;
+                    email?: string;
+                    displayName?: string;
+                    photoURL?: string;
+               };
+          };
+     };
+};
+
+export function ChatScreen({ route }: ChatScreenProps) {
+     const { user } = route.params;
+
+     const [messages, setMessages] = useState([]);
+
+     const onResult = (QuerySnapshot) => {
+          QuerySnapshot._docs.length > 0 &&
+               setMessages(
+                    QuerySnapshot._docs.map((doc) => ({
+                         _id: doc.data()._id,
+                         createdAt: doc.data().createdAt.toDate(),
+                         text: doc.data().text,
+                         user: doc.data().user,
+                    }))
+               );
+     };
+
+     const onError = (error) => {
+          console.error(error);
+     };
+
+     useLayoutEffect(() => {
+          const suscribe = firestore()
+               .collection('chats')
+               .orderBy('createdAt', 'desc')
+               .onSnapshot(onResult, onError);
+          return suscribe;
+     });
+
+     const onSend = useCallback((menssages = []) => {
+          setMessages((previusMenssages) => GiftedChat.append(previusMenssages, menssages));
+          const { _id, createdAt, text, user } = menssages[0];
+          firestore().collection('chats').add({ _id, createdAt, text, user });
+     }, []);
+
      return (
-          <View style={styles.container}>
-               <Text style={styles.text}>Chat screen</Text>
-          </View>
+          <GiftedChat
+               messages={messages}
+               onSend={(message) => onSend(message)}
+               user={{ _id: user.email ? user.email : '', avatar: user.photoURL }}
+               textInputProps={{ style: styles.textInput }}
+          />
      );
 }
 
 const styles = StyleSheet.create({
-     container: {
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#ffffff',
-     },
-     photoURL: { width: 100, height: 100, borderRadius: 100 },
-     text: {
-          color: '#000000',
-          textAlign: 'center',
-          fontSize: 14,
-          fontWeight: 'bold',
-     },
-     button_sing_out: {
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'row',
-          borderRadius: 8,
-          backgroundColor: '#7c33b4',
-          width: '80%',
-          height: 40,
-     },
-     button_text: {
-          fontWeight: '500',
-          color: '#ffff',
-     },
+     textInput: { flex: 1, marginLeft: 8, color: 'black', fontSize: 16 },
 });

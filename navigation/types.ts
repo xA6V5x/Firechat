@@ -17,7 +17,12 @@ export type RootStackParamList = {
           };
           singOut: () => void;
      };
-     Chat: undefined;
+     Chat: {
+          user: {
+               displayName?: string;
+               photoURL?: string;
+          };
+     };
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
