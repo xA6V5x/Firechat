@@ -1,4 +1,4 @@
-import { Image, StyleSheet, TouchableOpacity, Text, View } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity, Text, View, ScrollView } from 'react-native';
 import React from 'react';
 
 type FirechatScreenProps = {
@@ -15,44 +15,73 @@ type FirechatScreenProps = {
 
 export function FirechatScreen({ route, navigation }: FirechatScreenProps) {
      const { user } = route.params;
+     const chats = [
+          'Grupito de Agus',
+          'Grupo Relleno',
+          'Negocios',
+          'Alguien',
+          'Alguien mas',
+          'Lalala',
+     ];
 
      return (
-          <View style={styles.container}>
-               <Text style={styles.text}>Welcome {user.displayName}</Text>
-               <Image source={{ uri: user.photoURL }} style={styles.photoURL} />
-               <TouchableOpacity
-                    style={styles.button_sing_out}
-                    onPress={() => navigation.navigate('Chat')}
-               >
-                    <Text style={styles.button_text}>Chat</Text>
-               </TouchableOpacity>
-          </View>
+          <ScrollView>
+               <View style={styles.container}>
+                    <View style={styles.header}>
+                         <Image source={{ uri: user.photoURL }} style={styles.photoURL} />
+                         <Text style={styles.text}>Welcome {user.displayName}</Text>
+                    </View>
+                    <View style={styles.line}></View>
+                    {chats.map((name, index) => {
+                         return (
+                              <TouchableOpacity
+                                   key={index}
+                                   style={styles.button_chat}
+                                   activeOpacity={0.8}
+                                   onPress={() => navigation.navigate('Chat')}
+                              >
+                                   <Text style={styles.button_text}>{name}</Text>
+                              </TouchableOpacity>
+                         );
+                    })}
+               </View>
+          </ScrollView>
      );
 }
 
 const styles = StyleSheet.create({
      container: {
           flex: 1,
+     },
+     header: {
+          padding: 10,
+          flexDirection: 'row',
+          justifyContent: 'space-around',
           alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#ffffff',
      },
      photoURL: { width: 100, height: 100, borderRadius: 100 },
      text: {
-          color: '#000000',
+          width: '50%',
+          color: '#ffffff',
           textAlign: 'center',
-          fontSize: 14,
+          fontSize: 18,
           fontWeight: 'bold',
      },
-     button_sing_out: {
-          marginTop: 15,
+     line: {
+          margin: 10,
+          marginHorizontal: 20,
+          height: 1,
+          backgroundColor: '#ffffff',
+     },
+     button_chat: {
+          marginBottom: 10,
+          marginHorizontal: 20,
           alignItems: 'center',
           justifyContent: 'center',
           flexDirection: 'row',
           borderRadius: 8,
           backgroundColor: '#7c33b4',
-          width: '80%',
-          height: 40,
+          height: 50,
      },
      button_text: {
           fontWeight: '500',

@@ -115,7 +115,11 @@ function RootNavigator({ user, SingOutButton }: RootNavigatorProps) {
                     name="Chat"
                     initialParams={{ user }}
                     component={ChatScreen}
-                    options={{ headerShown: true, animation: 'slide_from_right' }}
+                    options={{
+                         title: 'Grupito de Agus',
+                         headerShown: true,
+                         animation: 'slide_from_right',
+                    }}
                />
           </Stack.Navigator>
      );
